@@ -27,7 +27,7 @@ const artpostSchema = new Schema({
         required: true 
     },
     bid_amount: { 
-        type: String
+        type: Number
     },
     comments:{ commentorname:
         {type: String,
