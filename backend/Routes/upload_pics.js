@@ -119,4 +119,28 @@ router.post('/file_addlike/:id', getUser, async (req, res) => {
     }
 });
 
+// Route 5: delete a post
+router.delete('/deletepost/:id', getUser, async (req, res) => {
+    try {
+        // find the note to be updated and update it
+        let del_artpost = await artpost.findById(req.params.id);
+        if(!del_artpost) {return res.status(404).send("Not Found")}
+
+        // Allow deletion for the authentic user
+        if (del_artpost.user.toString() !== req.user.is){
+            return res.status(404).send("Not Found")
+        }
+
+        del_artpost = await artpost.findByIdAndDelete(req.params.id)
+        res.json({"Success":"Art post has been deleted"});
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({ errors: 'Internal Server Error' })
+    }
+})
+
+
+
+
+
 module.exports = router;

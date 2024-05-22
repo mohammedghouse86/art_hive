@@ -99,8 +99,9 @@ router.post('/login', [
 // ROUTE - 3 Getting logging user details using POST "api/auth/getuser". No login required. 
 router.post('/getuser',getUser, async (req, res) => {
      try {
-           userIs = req.user.is; // userId = req.user.id; note req.user.id dosen't work. Since data =  { user: { is: '663b9782ee0a0e158a12c079' }, iat: 1715181442 }
-          const user = await User.findById(userIs).select("-password")
+           let userIs = req.user.is; // userId = req.user.id; note req.user.id dosen't work. Since data =  { user: { is: '663b9782ee0a0e158a12c079' }, iat: 1715181442 }
+           console.log('req.user.is', req.user.is);
+           const user = await User.findById(userIs).select("-password")
           res.send(user);
           console.log(user);
      } catch (error) {
