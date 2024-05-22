@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const artpost = require('../Models/artpost_Schema');
 const { body, validationResult } = require('express-validator');
-var getUser = require('../MiddleWare/getUser');
+var getUser = require('../MiddleWare/GetUser');
 const multer = require('multer');
 const like = require('../Models/likeSchema');
 const commentSchema = require('../Models/commentSchema');
+const likeSchema = require('../Models/likeSchema');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -104,14 +105,18 @@ router.post('/file_addlike/:id', getUser, async (req, res) => {
             return res.status(404).json({ error: 'File not found' });
         }
 
-        const likes = 1;
-        console.log(file);
-        const saved_new_artpost = {likes:likes+file.likes}; 
+        const  like  = true;
+        const user = req.user.is; // Correctly assign user from req.user
+        const artpost1 = req.params.id;
 
+        const new_like = new likeSchema({
+            user:user,
+            artpost:artpost1,
+            like:like
+    });
 
-        // find the note to be updated and update it
-        let new_artpost = await artpost.findByIdAndUpdate(req.params.id, {$set:saved_new_artpost}, {new:true})
-        res.json({new_artpost});
+    const saved_new_like = await new_like.save();
+    res.json(saved_new_like);
 
 
     } catch (error) {
