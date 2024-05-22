@@ -4,7 +4,8 @@ const artpost = require('../Models/artpost_Schema');
 const { body, validationResult } = require('express-validator');
 var getUser = require('../MiddleWare/getUser');
 const multer = require('multer');
-
+const like = require('../Models/likeSchema');
+const commentSchema = require('../Models/commentSchema');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -36,8 +37,7 @@ router.post('/art', getUser, upload.single('file'), [
             tag:tag,
             imageBase64:imageBase64,
             bid_amount:bid_amount,
-            likes:0
-        });
+    });
 
         const saved_new_artpost = await new_artpost.save();
         res.json(saved_new_artpost);
@@ -76,20 +76,21 @@ router.post('/file_addComment/:id', getUser, async (req, res) => {
             return res.status(404).json({ error: 'File not found' });
         }
 
-        const {commentorname,hiscomment } = req.body;
-        const saved_new_artpost = {comments:{commentorname:null,hiscomment:null}};
-        {saved_new_artpost.comments.commentorname = commentorname};            
-        {saved_new_artpost.comments.hiscomment = hiscomment};      
+        const { comment } = req.body;
+        const user = req.user.is; // Correctly assign user from req.user
+        const artpost1 = req.params.id;
 
+        const new_comment = new commentSchema({
+            user:user,
+            artpost:artpost1,
+            comment:comment
+    });
 
-        // find the note to be updated and update it
-        let new_artpost = await artpost.findByIdAndUpdate(req.params.id, {$set:saved_new_artpost}, {new:true})
-        res.json({new_artpost});
-
-
+        const saved_new_artpost = await new_comment.save();
+        res.json(saved_new_artpost);
     } catch (error) {
         console.error(error.message);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ errors: 'Internal Server Error' });
     }
 });
 
@@ -127,6 +128,8 @@ router.delete('/deletepost/:id', getUser, async (req, res) => {
         if(!del_artpost) {return res.status(404).send("Not Found")}
 
         // Allow deletion for the authentic user
+        console.log('del_artpost.user.toString() = ', del_artpost.user.toString());
+        console.log('req.user.is = ', req.user.is);
         if (del_artpost.user.toString() !== req.user.is){
             return res.status(404).send("Not Found")
         }
@@ -138,6 +141,33 @@ router.delete('/deletepost/:id', getUser, async (req, res) => {
         return res.status(500).json({ errors: 'Internal Server Error' })
     }
 })
+
+// 6. Route to remove like to a post
+router.post('/file_removelike/:id', getUser, async (req, res) => {
+    try {
+        const fileId = req.params.id;
+        const file = await artpost.findById(fileId);
+
+        if (!file) {
+            return res.status(404).json({ error: 'File not found' });
+        }
+
+        const likes = 1;
+        console.log(file);
+        const saved_new_artpost = {likes:likes+file.likes}; 
+
+
+        // find the note to be updated and update it
+        let new_artpost = await artpost.findByIdAndUpdate(req.params.id, {$set:saved_new_artpost}, {new:true})
+        res.json({new_artpost});
+
+
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 
 
