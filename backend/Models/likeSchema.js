@@ -12,6 +12,10 @@ const likeSchema = new Schema({
     },
     like: { 
         type: Boolean,  
+    },
+    date: {
+          type: Date,
+          default: Date.now
     }
 });
 
