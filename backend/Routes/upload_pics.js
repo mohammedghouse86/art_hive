@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 var getUser = require('../MiddleWare/GetUser');
 const commentSchema = require('../Models/commentSchema');
 const likeSchema = require('../Models/likeSchema');
+const bidSchema = require('../Models/bidSchema');
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -20,7 +21,7 @@ router.post('/art', getUser, upload.single('file'), [
     try {
         const { originalname, mimetype, buffer } = req.file;
         const imageBase64 = buffer.toString('base64');
-        const { filename, contentType, tag, bid_amount, username } = req.body;
+        const { filename, contentType, tag, username } = req.body;
         const user = req.user.is; // Correctly assign user from req.user
         const username1 = req.user.name; // Correctly assign user from req.user
         console.log(user, username1)
@@ -36,7 +37,6 @@ router.post('/art', getUser, upload.single('file'), [
             contentType: contentType,
             tag: tag,
             imageBase64: imageBase64,
-            bid_amount: bid_amount,
         });
 
         const saved_new_artpost = await new_artpost.save();
@@ -192,8 +192,61 @@ router.delete('/file_removecomment/:id', getUser, async (req, res) => {
     }
 });
 
+// 8. Route to add bid to a post
+router.post('/post_bid/:id', getUser, async (req, res) => {
+    try {
+        const fileId = req.params.id;
+        const file = await artpost.findById(fileId);
+
+        if (!file) {
+            return res.status(404).json({ error: 'File not found' });
+        }
+
+        const { bid } = req.body;
+        const user = req.user.is; // Correctly assign user from req.user
+        const artpost1 = req.params.id;
+
+        const new_bid = new bidSchema({
+            user: user,
+            artpost: artpost1,
+            bid: bid
+        });
+
+        const saved_new_bid = await new_bid.save();
+        res.json({ "Success": "bid posted for the Art" ,"bid =":saved_new_bid});
 
 
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
+// 9. Route to get the highest bid
+router.get('/highest-bid/:_id', async (req, res) => {
+    try {
+        const  artpostId  = req.params;
+
+        
+        const highestBid_1= await bidSchema.findOne()
+        console.log('this is the id you are looking for =',artpostId)
+
+        // Find the highest bid for the specific art post
+        const highestBid = await bidSchema.findOne({artpost:artpostId}) 
+            .sort({ bid: -1 })
+            .populate('user')
+            .populate('artpost');
+
+        if (!highestBid) {
+            return res.status(404).json({ message: 'No bids found for this art post' });
+        }
+
+        // Send the highest bid as the response
+        res.json(highestBid);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 module.exports = router;
