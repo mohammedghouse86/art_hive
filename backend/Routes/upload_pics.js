@@ -59,6 +59,7 @@ router.get('/file/:id', getUser, async (req, res) => {
 
         // Send file as a response
         res.set('Content-Type', file.contentType);
+        res.type('png');
         res.send(Buffer.from(file.imageBase64, 'base64'));
     } catch (error) {
         console.error(error.message);

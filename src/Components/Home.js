@@ -1,8 +1,9 @@
 import React from 'react'
+import AllPost from './AllPost'
 
 const Home = () => {
   return (
-    <div>This is Home</div>
+    <AllPost/>
   )
 }
 
