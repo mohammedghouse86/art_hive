@@ -249,4 +249,10 @@ router.get('/highest-bid/:_id', async (req, res) => {
     }
 });
 
+// 10. Fetching all Post
+router.get('/fetchallpost', getUser, async (req, res) => {
+    const post = await artpost.find();
+    res.json(post);
+})
+
 module.exports = router;
