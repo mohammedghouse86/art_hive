@@ -3,9 +3,9 @@ const router = express.Router();
 const artpost = require('../Models/artpost_Schema');
 const { body, validationResult } = require('express-validator');
 var getUser = require('../MiddleWare/GetUser');
-const multer = require('multer');
 const commentSchema = require('../Models/commentSchema');
 const likeSchema = require('../Models/likeSchema');
+const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 

@@ -8,15 +8,21 @@ const bcrypt = require('bcryptjs')
 var jwt = require('jsonwebtoken');
 const jwt_SECRET = "BLAH#BL@#";
 var getUser = require('../MiddleWare/GetUser.js')
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 
 // ROUTE - 1 Creating a User using POST "/api/auth". Dosen't require auth
-router.post('/', [
+router.post('/', upload.single('file'), [
      body('name', 'enter a valid name').isLength({ min: 3 }),
      body('email', 'enter a valid email').isEmail(),
      body('password', 'enter password with minimum 5 charecters').isLength({ min: 5 }),
      body('date_of_birth', 'enter password with minimum 5 charecters').isDate(),
 ], async (req, res) => {
      // if there are errors sending the post message send bad request
+     const { originalname, mimetype, buffer } = req.file;
+     const imageBase64 = buffer.toString('base64');
      let success = false;
      const errors = validationResult(req);
      if (!errors.isEmpty()) {
@@ -37,7 +43,8 @@ router.post('/', [
                name: req.body.name,
                password: secPaWO,
                email: req.body.email,
-               date_of_birth: req.body.date_of_birth
+               date_of_birth: req.body.date_of_birth,
+               imageBase64: imageBase64
           })
 
           // creating and sending the JSON WEB TOKEN
@@ -72,10 +79,12 @@ router.post('/login', [
      try {
           const jwt_SECRET = "BLAH#BL@#";
           let user = await User.findOne({ email });
+                   
           if (!user) {
                success = false
                return res.status(400).json({ errors: "Please try to login with correct credentials" });
           }
+
           const passwordCompare = await bcrypt.compare(password, user.password);
           console.log(password, user.password);
           if (!passwordCompare) {
@@ -87,6 +96,8 @@ router.post('/login', [
           }
           const authtoken = jwt.sign(data, jwt_SECRET);
           success = true
+
+
           res.json({ success, authtoken })
      }
      catch (error) {
@@ -97,11 +108,11 @@ router.post('/login', [
 
 
 // ROUTE - 3 Getting logging user details using POST "api/auth/getuser". No login required. 
-router.post('/getuser',getUser, async (req, res) => {
+router.post('/getuser', getUser, async (req, res) => {
      try {
-           let userIs = req.user.is; // userId = req.user.id; note req.user.id dosen't work. Since data =  { user: { is: '663b9782ee0a0e158a12c079' }, iat: 1715181442 }
-           console.log('req.user.is', req.user.is);
-           const user = await User.findById(userIs).select("-password")
+          let userIs = req.user.is; // userId = req.user.id; note req.user.id dosen't work. Since data =  { user: { is: '663b9782ee0a0e158a12c079' }, iat: 1715181442 }
+          console.log('req.user.is', req.user.is);
+          const user = await User.findById(userIs).select("-password")
           res.send(user);
           console.log(user);
      } catch (error) {
@@ -109,4 +120,22 @@ router.post('/getuser',getUser, async (req, res) => {
           res.status(500).send('Internal Server Error');
      }
 })
+
+
+// ROUTE - 4 Getting logged in user display pic
+router.post('/getuser_displaypic', getUser, async (req, res) => {
+     try {
+          let userIs = req.user.is; // userId = req.user.id; note req.user.id dosen't work. Since data =  { user: { is: '663b9782ee0a0e158a12c079' }, iat: 1715181442 }
+          console.log('req.user.is', req.user.is);
+          const user = await User.findById(userIs).select("-password")
+          //console.log(user);
+          res.set('Content-Type', 'image/jpeg');
+          res.set('Content-Disposition', `attachment; filename="${user.name}.jpg"`);
+          res.send(Buffer.from(user.imageBase64, 'base64'));
+     } catch (error) {
+          console.error(error.message);
+          res.status(500).send('Internal Server Error');
+     }
+})
+
 module.exports = router

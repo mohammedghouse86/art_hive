@@ -22,7 +22,11 @@ const UserSchema = new Schema({
       date: {
             type: Date,
             default: Date.now
-      }
+      },
+      imageBase64: {
+            type: String,
+            required: true
+        },
 });
 const User = mongoose.model('user', UserSchema)
 //User.createIndexes(); I dont need extra index I already have one
