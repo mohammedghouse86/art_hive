@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import ArtContext from "../ContextAPI/ArtWorks/artContext";
 import PostItem from './PostItem';
 
@@ -10,14 +10,14 @@ const AllPost = () => {
 
     useEffect(() => {
         getPost()
-    }, [getPost]);
+    }, [getPost]);// col position-absolute top-50 start-50
 
     return (
         <>
-            <div className='row row-cols-5'>
+            <div className='container'>
                 {art_post.map((art_post_1, i) => {
                     return (
-                        (art_post_1._id !== undefined) && <PostItem key={art_post_1._id} post={art_post[i]} />
+                        (art_post_1._id !== undefined) && <PostItem key={art_post_1._id} post={art_post[i]} i={i} />
                     )
                 })}</div>
         </>)

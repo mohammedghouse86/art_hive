@@ -256,4 +256,11 @@ router.get('/fetchallpost', getUser, async (req, res) => {
     res.json(post);
 })
 
+// 11. Fetching all Comments for a perticulat ID
+router.get('/fetchallcomments', getUser, async (req, res) => {
+    const artID = req.params.id;
+    const comments = await commentSchema.find(); // Populating user with name field
+    res.json(comments);
+})
+
 module.exports = router;
