@@ -7,6 +7,7 @@ const commentSchema = require('../Models/commentSchema');
 const likeSchema = require('../Models/likeSchema');
 const bidSchema = require('../Models/bidSchema');
 const multer = require('multer');
+const user_Schema = require('../Models/user_Schema');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -252,15 +253,30 @@ router.get('/highest-bid/:_id', async (req, res) => {
 
 // 10. Fetching all Post
 router.get('/fetchallpost', getUser, async (req, res) => {
-    const post = await artpost.find();
+    const post = await artpost.find().populate('user', 'name imageBase64').select("-password"); // Populating user with name field;
     res.json(post);
 })
 
 // 11. Fetching all Comments for a perticulat ID
 router.get('/fetchallcomments', getUser, async (req, res) => {
     const artID = req.params.id;
-    const comments = await commentSchema.find(); // Populating user with name field
+    const comments = await commentSchema.find().populate('user', 'name'); // Populating user with name field
     res.json(comments);
+})
+
+//12. Fetching user name using the user ID
+router.get('/fetchUserName/:id', getUser, async (req, res) => {
+    const userID = req.params.id;
+    const username2 = await user_Schema.findById(userID);
+    res.json(username2);
+})
+
+
+//13. Fetching all likes for a post
+router.get('/fetchAllLikes/:id', getUser, async (req, res) => {
+    const artpostID = req.params.id;
+    const likes = await likeSchema.find({ artpost: artpostID });
+    res.json(likes);
 })
 
 module.exports = router;
