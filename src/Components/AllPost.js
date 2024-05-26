@@ -10,7 +10,7 @@ const AllPost = () => {
 
     useEffect(() => {
         getPost()
-    }, [getPost]);// col position-absolute top-50 start-50
+    }, []);// col position-absolute top-50 start-50
 
     return (
         <>
