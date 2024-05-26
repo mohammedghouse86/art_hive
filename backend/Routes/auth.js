@@ -19,10 +19,11 @@ router.post('/', upload.single('file'), [
      body('email', 'enter a valid email').isEmail(),
      body('password', 'enter password with minimum 5 charecters').isLength({ min: 5 }),
      body('date_of_birth', 'enter password with minimum 5 charecters').isDate(),
+     body('imageBase64','photo not properly uploaded').isLength({ min: 3 })
 ], async (req, res) => {
      // if there are errors sending the post message send bad request
-     const { originalname, mimetype, buffer } = req.file;
-     const imageBase64 = buffer.toString('base64');
+     //const { originalname, mimetype, buffer } = req.file;
+     //const imageBase64 = buffer.toString('base64');
      let success = false;
      const errors = validationResult(req);
      if (!errors.isEmpty()) {
@@ -44,7 +45,7 @@ router.post('/', upload.single('file'), [
                password: secPaWO,
                email: req.body.email,
                date_of_birth: req.body.date_of_birth,
-               imageBase64: imageBase64
+               imageBase64: req.body.imageBase64
           })
 
           // creating and sending the JSON WEB TOKEN
