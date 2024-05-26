@@ -1,14 +1,13 @@
 import React, {useContext, useState} from 'react'
-import NoteContext from "../Context/notes/noteContext";
+import ArtContext from "../ContextAPI/ArtWorks/artContext";
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const context = useContext(NoteContext);
+  const context = useContext(ArtContext);
   const [Credential, SetCredential] = useState({ email: "", password: "" })
-  const {alert,setAlert} = context; {/* ADDING ALERT FROM CONTEX API*/}
-  //let history = useHistory();
+  //const {alert,setAlert} = context; {/* ADDING ALERT FROM CONTEX API*/}
   let history = useNavigate();
-
+  /*
   const onSuccess = () => {
     setAlert({status:true,message:`logged in...`});
     console.log(alert);
@@ -17,10 +16,10 @@ const Login = () => {
       history("/"); // it rerouts us to the home page 
     },1500);
   }
-
+*/
   const Submit_Login_Form = async (e) => {
     e.preventDefault();
-    console.log('email=',Credential.email,'password=',Credential.password)
+    //console.log('email=',Credential.email,'password=',Credential.password)
     const response = await fetch("http://localhost:5000/api/auth/login", {
       method: 'POST',
       headers: {
@@ -34,7 +33,7 @@ const Login = () => {
     if (json.success) {
       // Save the auth token and redirect
       localStorage.setItem('token', json.authtoken);
-      onSuccess();
+      //onSuccess();
       history("/"); // it rerouts us to the home page 
     }
     else {

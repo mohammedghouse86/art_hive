@@ -7,14 +7,14 @@ const Signup = () => {
   const context = useContext(ArtContext);
   const { alert, setAlert } = context; {/* ADDING ALERT FROM CONTEX API*/ }
   const [Credential, SetCredential] = useState({ name: "", email: "", password: "", cpassword: "", date_of_birth:"" });
-  //  let history = useNavigate();
+  let history = useNavigate();
 
   /*const onSuccess = () => {
     setAlert({status:true,message:`${Credential.name} user created`});
     console.log(alert);
     setTimeout(()=>{
       setAlert({status:null,message:``});
-      history("/"); // it rerouts us to the home page 
+      
     },1500);
   }
   */
@@ -40,6 +40,7 @@ const Signup = () => {
       // Save the auth token and redirect
       localStorage.setItem('token', json.authtoken);
       //onSuccess();
+      history("/"); // it rerouts us to the home page 
     }
     else {
       console.log("Invalid credentials");

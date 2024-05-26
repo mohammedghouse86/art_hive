@@ -19,7 +19,7 @@ router.post('/', upload.single('file'), [
      body('email', 'enter a valid email').isEmail(),
      body('password', 'enter password with minimum 5 charecters').isLength({ min: 5 }),
      body('date_of_birth', 'enter password with minimum 5 charecters').isDate(),
-     body('imageBase64','photo not properly uploaded').isLength({ min: 3 })
+     body('imageBase64', 'photo not properly uploaded').isLength({ min: 3 })
 ], async (req, res) => {
      // if there are errors sending the post message send bad request
      //const { originalname, mimetype, buffer } = req.file;
@@ -80,7 +80,7 @@ router.post('/login', [
      try {
           const jwt_SECRET = "BLAH#BL@#";
           let user = await User.findOne({ email });
-                   
+
           if (!user) {
                success = false
                return res.status(400).json({ errors: "Please try to login with correct credentials" });
@@ -133,6 +133,27 @@ router.post('/getuser_displaypic', getUser, async (req, res) => {
           res.set('Content-Type', 'image/jpeg');
           res.set('Content-Disposition', `attachment; filename="${user.name}.jpg"`);
           res.send(Buffer.from(user.imageBase64, 'base64'));
+     } catch (error) {
+          console.error(error.message);
+          res.status(500).send('Internal Server Error');
+     }
+})
+
+
+// ROUTE - 5 Getting logged in user details
+router.post('/getloggedin_user/:id', async (req, res) => {
+     try {
+          var jwt = require('jsonwebtoken');
+          const jwt_SECRET = "BLAH#BL@#";
+          const token = req.params.id; // userId = req.user.id; note req.user.id dosen't work. Since data =  { user: { is: '663b9782ee0a0e158a12c079' }, iat: 1715181442 }
+          if (!token) {
+               return res.status(401).send({ Error: "INVALID TOKEN BRAV!!!!" });
+          }
+          const data = jwt.verify(token, jwt_SECRET);
+          const dude = data.user.is;
+          const user = await User.findById(dude).select("-password")
+          //res.send(user)
+          return (res.json(user))
      } catch (error) {
           console.error(error.message);
           res.status(500).send('Internal Server Error');
