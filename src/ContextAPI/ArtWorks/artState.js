@@ -45,7 +45,6 @@ const ArtState = (props) => {
     }
   };
 
-
   // Fetching the total likes by using artpostID
   const getLikes = async (id) => {
     try {
@@ -86,12 +85,31 @@ const ArtState = (props) => {
       return 0;
     }
   };
+  
+  // Fetching the total likes by using artpostID
+  const addLikes = async (id) => {
+    try {
+      const response = await fetch(`${host}/api/upload/file_addlike/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token')  
+        } // user - from auth-token and post from param.id
+        
+      });
+      const res_json = await response.json();
+      console.log(res_json);
+    } catch (error) {
+      console.error("Failed to fetch likes: ", error);
+      return 0;
+    }
+  };
 
 
 
 
   return (
-    <ArtContext.Provider value={{ art_post, setArtPost, getPost, comment, setComment, getComment, getLikes, likes, postComment }}>
+    <ArtContext.Provider value={{ art_post, addLikes, setArtPost, getPost, comment, setComment, getComment, getLikes, likes, postComment }}>
       {props.children}
     </ArtContext.Provider>
   );

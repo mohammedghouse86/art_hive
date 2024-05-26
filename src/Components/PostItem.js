@@ -4,7 +4,7 @@ import CommentItem from './CommentItem';
 
 const PostItem = ({ post, i }) => {
     const context = useContext(ArtContext);
-    const { comment, getComment, getLikes, postComment } = context;
+    const { comment, getComment, getLikes, postComment, addLikes } = context;
     const [likes, setLikes] = useState(0);
     const { imageBase64, filename } = post;
     const [bakwas, Setbakwas] = useState({ bakwas: "" }) // bakwas === comment
@@ -26,6 +26,17 @@ const PostItem = ({ post, i }) => {
         Setbakwas({ bakwas: "" }); // Clear the input field
     }
 
+    const fetchLikes = async () => {
+        const numLikes = await getLikes(post._id);
+        setLikes(numLikes);
+    };
+
+    const fun_addlikes = async () => {
+        await addLikes(post._id);
+        fetchLikes();
+        };
+    
+
     const onChange = (e) => {
         Setbakwas({ ...bakwas, [e.target.name]: e.target.value })
     }
@@ -41,11 +52,12 @@ const PostItem = ({ post, i }) => {
                         </div>
                         <img src={`data:image/jpeg;base64,${imageBase64}`} alt={filename} style={{ width: '450px', height: '350px' }} />
                         <p className="card-text">{post.filename}</p>
-                        <p className="card-text">Likes - {likes}
-                            <button style={{fontSize: '24px', border: 'none', color:'red', background: 'none', cursor: 'pointer'}}>
-                                <i class="fas fa-heart"></i>
+                        <p className="card-text">
+                            
+                            <button onClick ={fun_addlikes} style={{fontSize: '24px', border: 'none', color:'red', background: 'none', cursor: 'pointer'}}>
+                                <i className="fas fa-heart mx-2 ">   {likes}</i>
                             </button>
-
+                            
 
                         </p>
                         <div>
