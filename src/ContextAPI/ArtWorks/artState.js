@@ -14,7 +14,7 @@ const ArtState = (props) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': localStorage.getItem('token')  
+          'auth-token': localStorage.getItem('token')
         }
       });
       const res_json = await response.json();
@@ -31,7 +31,7 @@ const ArtState = (props) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': localStorage.getItem('token')  
+          'auth-token': localStorage.getItem('token')
         }
       });
 
@@ -52,7 +52,7 @@ const ArtState = (props) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': localStorage.getItem('token')  
+          'auth-token': localStorage.getItem('token')
         }
       });
       const res_json = await response.json();
@@ -70,7 +70,7 @@ const ArtState = (props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': localStorage.getItem('token')  
+          'auth-token': localStorage.getItem('token')
         },
         body: JSON.stringify({
           "comment": comment_1
@@ -80,12 +80,12 @@ const ArtState = (props) => {
       //console.log(res_json)
       setComment(comment.concat(res_json))
     }
-     catch (error) {
+    catch (error) {
       console.error("Failed to fetch likes: ", error);
       return 0;
     }
   };
-  
+
   // Fetching the total likes by using artpostID
   const addLikes = async (id) => {
     try {
@@ -93,12 +93,53 @@ const ArtState = (props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': localStorage.getItem('token')  
+          'auth-token': localStorage.getItem('token')
         } // user - from auth-token and post from param.id
-        
+
       });
       const res_json = await response.json();
-      console.log(res_json);
+      //console.log(res_json);
+    } catch (error) {
+      console.error("Failed to fetch likes: ", error);
+      return 0;
+    }
+  };
+
+  // Checking if the dude liked a pic or not
+  const did_like_q = async (postID) => {   
+    try {
+      const response = await fetch(`${host}/api/upload/did_user_like/${postID}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token')
+        } // user - from auth-token and post from param.id
+
+      });
+      const res_json = await response.json();
+      if (res_json.length<1){
+      return (false)} //retun user has not liked the post so now you can like it
+      else {
+      return (true)//retun user has liked the post so now you can dislike it
+      }
+    } catch (error) {
+      console.error("Failed to fetch likes: ", error);
+      return 0;
+    }
+  };
+
+  // Removing a like
+  const delete_like = async (id) => {
+    try {
+      const response = await fetch(`${host}/api/upload/file_removelike/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token')
+        } // user - from auth-token and post from param.id
+
+      });
+      
     } catch (error) {
       console.error("Failed to fetch likes: ", error);
       return 0;
@@ -109,7 +150,7 @@ const ArtState = (props) => {
 
 
   return (
-    <ArtContext.Provider value={{ art_post, addLikes, setArtPost, getPost, comment, setComment, getComment, getLikes, likes, postComment }}>
+    <ArtContext.Provider value={{ art_post, delete_like, did_like_q, addLikes, setArtPost, getPost, comment, setComment, getComment, getLikes, likes, postComment }}>
       {props.children}
     </ArtContext.Provider>
   );

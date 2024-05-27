@@ -18,7 +18,7 @@ const User_loggedIn = () => {
 
                 const data = await response.json();
                 setUser(data);
-                console.log('this is the response', data);
+                //console.log('this is the response', data);
             }
             catch (error) {
                 console.error('catch error', error);
@@ -28,7 +28,7 @@ const User_loggedIn = () => {
     }, [])
     return (
         <div>
-            <img src={`data:image/jpeg;base64,${user.imageBase64}`} alt={user.name} style={{ width: '45px', height: '50px', borderRadius:'50%', border:'2px solid red'}} />
+            <img src={`${user.imageBase64}`} alt={user.name} style={{ width: '45px', height: '50px', borderRadius:'50%', border:'2px solid red'}} />
              - - {user.name} 
         </div>
     )

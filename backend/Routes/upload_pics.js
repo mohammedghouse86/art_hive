@@ -117,7 +117,7 @@ router.post('/file_addlike/:id', getUser, async (req, res) => {
         });
 
         const saved_new_like = await new_like.save();
-        res.json({ "Success": "Art post has been liked" ,"like =":saved_new_like});
+        res.json({ "Success": "Art post has been liked", "like =": saved_new_like });
 
 
     } catch (error) {
@@ -149,27 +149,13 @@ router.delete('/deletepost/:id', getUser, async (req, res) => {
 })
 
 // 6. Route to remove like for a post
-router.delete('/file_removelike/:id', getUser, async (req, res) => {
-    try {
-        // find the like to be removed
-        let del_like = await likeSchema.findById(req.params.id);
-        if (!del_like) { return res.status(404).send("Not Found") }
+router.delete('/file_removelike/:postID', getUser, async (req, res) => {
+    const artpostID = req.params.postID; // Post ID
+    const userID = req.user.is; // Correctly assign user from req.user
+    const response = await likeSchema.findOneAndDelete({ artpost: artpostID, user: userID });
+    res.json({ "Success": "Art post has disliked" });})
 
-        // Allow deletion for the authentic user
-        console.log('del_like.user.toString() = ', del_like.user.toString());
-        console.log('req.user.is = ', req.user.is);
-        if (del_like.user.toString() !== req.user.is) {
-            return res.status(404).send("Not Found")
-        }
 
-        del_like = await likeSchema.findByIdAndDelete(req.params.id)
-        res.json({ "Success": "Like has been removed" });
-
-    } catch (error) {
-        console.error(error.message);
-        return res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
 
 // 7. Route to remove comment for a post
 router.delete('/file_removecomment/:id', getUser, async (req, res) => {
@@ -215,7 +201,7 @@ router.post('/post_bid/:id', getUser, async (req, res) => {
         });
 
         const saved_new_bid = await new_bid.save();
-        res.json({ "Success": "bid posted for the Art" ,"bid =":saved_new_bid});
+        res.json({ "Success": "bid posted for the Art", "bid =": saved_new_bid });
 
 
     } catch (error) {
@@ -227,14 +213,14 @@ router.post('/post_bid/:id', getUser, async (req, res) => {
 // 9. Route to get the highest bid
 router.get('/highest-bid/:_id', async (req, res) => {
     try {
-        const  artpostId  = req.params;
+        const artpostId = req.params;
 
-        
-        const highestBid_1= await bidSchema.findOne()
-        console.log('this is the id you are looking for =',artpostId)
+
+        const highestBid_1 = await bidSchema.findOne()
+        console.log('this is the id you are looking for =', artpostId)
 
         // Find the highest bid for the specific art post
-        const highestBid = await bidSchema.findOne({artpost:artpostId}) 
+        const highestBid = await bidSchema.findOne({ artpost: artpostId })
             .sort({ bid: -1 })
             .populate('user')
             .populate('artpost');
@@ -278,5 +264,14 @@ router.get('/fetchAllLikes/:id', getUser, async (req, res) => {
     const likes = await likeSchema.find({ artpost: artpostID });
     res.json(likes);
 })
+
+//14. Fetching user name if he liked a perticular post using the post ID
+router.get('/did_user_like/:postID', getUser, async (req, res) => {
+    const artpostID = req.params.postID; // Post ID
+    const userID = req.user.is; // Correctly assign user from req.user
+    const response = await likeSchema.find({ artpost: artpostID, user: userID });
+    console.log('user = ', userID,' trying to like post with ID = ',artpostID)
+    res.json(response);
+    })
 
 module.exports = router;
