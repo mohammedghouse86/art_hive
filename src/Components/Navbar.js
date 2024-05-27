@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../img/ArtHive_LOGO.jpg';
 import { useNavigate } from 'react-router-dom';
+import User_loggedIn from './user_loggedIn'
 
 const Navbar = () => {
   let history = useNavigate();
@@ -37,7 +38,11 @@ const Navbar = () => {
             </div>
               <div className="p-2">
                 <Link className={`nav-link ${location.pathname === "/signup" ? "active p-1 text-primary-emphasis bg-light-subtle border border-primary-subtle rounded-3" : "navbar-nav me-auto mb-2 mb-lg-0"}`} aria-current="page" to="/signup">SignUp</Link>
-              </div></div> : <div><button type='button' className="btn btn-outline-warning mx-3 disabled">username</button><button type='button' className="btn btn-danger mx-3" onClick ={fun_Logout}> LOG OUT</button></div>}
+              </div></div> : 
+              <div className='d-flex align-items'>
+                
+                <button type='button' className="btn btn-outline-warning mx-1 disabled"><User_loggedIn /></button><button type='button' className="btn btn-danger mx-1" onClick ={fun_Logout}> LOG OUT</button>
+              </div>}
           </div>
         </div>
       </nav >

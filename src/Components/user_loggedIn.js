@@ -28,8 +28,11 @@ const User_loggedIn = () => {
     }, [])
     return (
         <div>
-            <img src={`${user.imageBase64}`} alt={user.name} style={{ width: '45px', height: '50px', borderRadius:'50%', border:'2px solid red'}} />
-             - - {user.name} 
+            {user.imageBase64? 
+            <div>
+            <img src={`${user.imageBase64}`} alt={user.name} style={{ width: '45px', height: '30px', borderRadius:'50%', border:'2px solid red'}} />
+              {user.name}
+             </div>:<div>...LOADING</div>} 
         </div>
     )
 }

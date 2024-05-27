@@ -34,17 +34,18 @@ const PostItem = ({ post, i }) => {
     const fun_HANDEL_likes = async () => {
         //console.log('this is post.user = ',post.user)
         const check_like = await did_like_q(post._id); //checking if the used did actually like the photo.
-        if(!check_like){
+        if (!check_like) {
             console.log('liking this post now....');
-        await addLikes(post._id);
-        fetchLikes();}
-        else{
+            await addLikes(post._id);
+            fetchLikes();
+        }
+        else {
             console.log('disliking this post now....');
             await delete_like(post._id);
             fetchLikes();
         }
-        };
-    
+    };
+
 
     const onChange = (e) => {
         Setbakwas({ ...bakwas, [e.target.name]: e.target.value })
@@ -55,19 +56,22 @@ const PostItem = ({ post, i }) => {
             <div className='d-flex justify-content-center'>
                 <div className="card my-3 mx-3" style={{ width: '30rem' }}>
                     <div className="card-body">
-                        <div className="d-flex justify-content-start mx-2 my-2"> <img src={`data:image/jpeg;base64,${post.user.imageBase64}`} alt={filename} style={{ width: '45px', height: '50px', borderRadius: '50%', border: '2px solid red' }} />
-                            <p className="card-text" > {post.user.name}
-                            </p>
-                        </div>
-                        <img src={`data:image/jpeg;base64,${imageBase64}`} alt={filename} style={{ width: '450px', height: '350px' }} />
-                        <p className="card-text">{post.filename}</p>
-                        <p className="card-text">
-                            
-                            <button onClick ={fun_HANDEL_likes} style={{fontSize: '24px', border: 'none', color:'red', background: 'none', cursor: 'pointer'}}>
-                                <i className="fas fa-heart mx-2 ">   {likes}</i>
-                            </button>
+
+                        
+                            <div className="d-flex justify-content-start mx-2 my-2"> <img src={`${post.user.imageBase64}`} alt={filename} style={{ width: '45px', height: '50px', borderRadius: '50%', border: '2px solid red' }} />
+                                <p className="card-text" > {post.user.name}
+                                </p>
+                            </div>
                             
 
+                        <img src={`data:image/jpeg;base64,${imageBase64}`} alt={filename} style={{ width: '450px', height: '350px' }} />
+                        <p className="card-text">{post.filename}</p>
+
+
+                        <p className="card-text">
+                            <button onClick={fun_HANDEL_likes} style={{ fontSize: '24px', border: 'none', color: 'red', background: 'none', cursor: 'pointer' }}>
+                                <i className="fas fa-heart mx-2 ">   {likes}</i>
+                            </button>
                         </p>
                         <div>
                             <input type='text' placeholder='Enter your comment' onChange={onChange} name='bakwas' value={bakwas.bakwas}></input>
