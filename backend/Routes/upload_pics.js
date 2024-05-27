@@ -16,32 +16,27 @@ router.post('/art', getUser, upload.single('file'), [
     body('filename', 'Enter a valid title').isLength({ min: 3 }),
     body('contentType', 'Enter a valid description').isLength({ min: 3 }),
     body('tag', 'Enter a tag').isLength({ min: 3 }),
-    body('bid_amount', 'Enter a bid_amount').isNumeric(),
-
-], async (req, res) => {
+    ], async (req, res) => {
     try {
-        const { originalname, mimetype, buffer } = req.file;
-        const imageBase64 = buffer.toString('base64');
-        const { filename, contentType, tag, username } = req.body;
+        let  success= false;
+        const { filename, contentType, tag, imageBase64 } = req.body;
         const user = req.user.is; // Correctly assign user from req.user
-        const username1 = req.user.name; // Correctly assign user from req.user
-        console.log(user, username1)
+        console.log(user)
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ success,errors: errors.array() });
         }
 
         const new_artpost = new artpost({
             user: user,
-            username: username,
             filename: filename,
             contentType: contentType,
             tag: tag,
             imageBase64: imageBase64,
         });
-
+        success= true
         const saved_new_artpost = await new_artpost.save();
-        res.json(saved_new_artpost);
+        res.json({ success,saved_new_artpost}); 
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({ errors: 'Internal Server Error' });

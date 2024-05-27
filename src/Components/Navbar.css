@@ -1,0 +1,48 @@
+.full-height-navbar {
+    height: calc(100vh - 20px); /* Full height minus top and bottom margin */
+    width: 250px; /* Fixed width */
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    margin-bottom: 10px; /* Bottom margin */
+    background-color: transparent; /* Invisible background */
+    z-index: 1000; /* Ensure it is on top */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .full-height-navbar .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .full-height-navbar .nav-link {
+    width: 100%;
+    text-align: left;
+    padding: 10px 20px; /* Adjust padding for better spacing */
+  }
+  
+  .full-height-navbar .nav-item {
+    width: 100%;
+  }
+  
+  .full-height-navbar .btn {
+    width: calc(100% - 40px); /* Adjust width considering padding */
+    margin: 5px 20px; /* Adjust margins for spacing */
+  }
+  
+  .full-height-navbar .navbar-brand {
+    margin-left: 20px;
+  }
+  
+  .full-height-navbar .d-flex {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .mt-auto {
+    margin-top: auto;
+  }
+  

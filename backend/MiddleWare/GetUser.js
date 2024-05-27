@@ -4,7 +4,7 @@ const jwt_SECRET = "BLAH#BL@#";
 const getUser = (req, res, next) => {
     const token = req.header('auth-token');
     if (!token) {
-        return res.status(401).send({ Error: "INVALID TOKEN BRAV!!!!" });
+        return res.status(401).send({ Error: "NO TOKEN BRAV!!!!" });
     }
     try {
         const data = jwt.verify(token, jwt_SECRET);

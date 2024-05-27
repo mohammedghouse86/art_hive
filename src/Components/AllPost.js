@@ -1,16 +1,20 @@
 import React, { useContext, useEffect } from 'react'
 import ArtContext from "../ContextAPI/ArtWorks/artContext";
 import PostItem from './PostItem';
-
+import { useNavigate } from 'react-router-dom';
 
 const AllPost = () => {
-
+    let history = useNavigate();
     const context = useContext(ArtContext);
     const { art_post, getPost } = context;
 
     useEffect(() => {
-        getPost()
-    }, []);// col position-absolute top-50 start-50
+        if (localStorage.getItem('token')) {
+            getPost()
+        }
+        else {
+          history("/login")}
+    }, []);
 
     return (
         <>
