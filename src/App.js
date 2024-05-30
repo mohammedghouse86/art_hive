@@ -7,6 +7,7 @@ import './App.css'; // Importing CSS styles
 import Signup from './Components/signup';
 import Login from './Components/login';
 import AddPost from './Components/AddPost';
+import Chat from './Components/Chat';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/addpost" element={<AddPost />} />
+                <Route path="/chat" element={<Chat />} />
               </Routes>
             </div></div></div>
       </Router>

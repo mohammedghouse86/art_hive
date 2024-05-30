@@ -29,6 +29,9 @@ const Navbar = () => {
             <Link className={`nav-link ${location.pathname === "/addpost" ? "active p-1 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" : ""}`} to="/addpost">Add Post</Link>
           </li>
           <li className="nav-item w-100">
+          <Link className={`nav-link ${location.pathname === "/chat" ? "active p-1 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" : ""}`} to="/chat">Chat</Link>
+          </li>
+          <li className="nav-item w-100">
           <Link className={`nav-link ${location.pathname === "/About" ? "active p-1 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" : ""}`} to="/About">About</Link>
           </li>
         </ul>

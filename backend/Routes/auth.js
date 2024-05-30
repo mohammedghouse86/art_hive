@@ -160,4 +160,10 @@ router.post('/getloggedin_user/:id', async (req, res) => {
      }
 })
 
+// ROUTE - 6 Fetching all Userrs
+router.get('/fetchallusers', getUser, async (req, res) => {
+     const users = await User.find().populate('name imageBase64').select("-password"); // Populating user with name field;
+     res.json(users);
+ })
+
 module.exports = router
