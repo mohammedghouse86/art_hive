@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import ArtContext from "../ContextAPI/ArtWorks/artContext";
 import CommentItem from './CommentItem';
+import { formatDistanceToNow } from 'date-fns';
 
 const PostItem = ({ post, i }) => {
     const context = useContext(ArtContext);
@@ -54,17 +55,17 @@ const PostItem = ({ post, i }) => {
     return (
         <div>
             <div className='d-flex justify-content-center'>
-                <div className="card my-3 mx-3" style={{ width: '30rem' }}>
+                <div className="card my-3 mx-3" style={{ width: '45rem' }}>
                     <div className="card-body">
 
                         
                             <div className="d-flex justify-content-start mx-2 my-2"> <img src={`${post.user.imageBase64}`} alt={filename} style={{ width: '45px', height: '50px', borderRadius: '50%', border: '2px solid red' }} />
-                                <p className="card-text" > {post.user.name}
+                                <p className="card-text" > {post.user.name}  -  {formatDistanceToNow(new Date(post.date))} Ago
                                 </p>
                             </div>
                             
 
-                        <img src={`data:image/jpeg;base64,${imageBase64}`} alt={filename} style={{ width: '450px', height: '350px' }} />
+                        <img src={`data:image/jpeg;base64,${imageBase64}`} alt={filename} style={{ width: '650px', height: '900px' }} />
                         <p className="card-text">{post.filename}</p>
 
 
@@ -77,7 +78,8 @@ const PostItem = ({ post, i }) => {
                             <input type='text' placeholder='Enter your comment' onChange={onChange} name='bakwas' value={bakwas.bakwas}></input>
                             <button type='button' onClick={fun_addComment}>Comment</button>
                         </div>
-                        <div className='container'>
+                </div>
+                        <div className='justify-content-start'>
                             {comment.map((comment_1, j) => {
                                 if (post._id === comment_1.artpost) {
                                     return (
@@ -87,7 +89,6 @@ const PostItem = ({ post, i }) => {
 
                             })}</div>
                     </div>
-                </div>
             </div>
         </div >
     );
