@@ -145,12 +145,36 @@ const ArtState = (props) => {
       return 0;
     }
   };
+  const [activatemsg,setActivatemsg]=useState(false)
+
+
+  // Activating the chat message
+  const activate_chat = async (id) => {
+    try {
+          if(activatemsg===false){setActivatemsg(true)}
+          else{setActivatemsg(true)}
+        }  catch (error) {
+      console.error("Failed to activate chat window ", error);
+      return 0;
+    }
+  };
+
+  const [chatbuddy,setChatbuddy]=useState([])
+    // sending the site members details with whome the user wants to chat
+    const sent_chat_buddy = async (user) => {
+      try {
+            setChatbuddy(user)
+          }  catch (error) {
+        console.error("Failed to activate chat window ", error);
+        return 0;
+      }
+    };
 
 
 
 
   return (
-    <ArtContext.Provider value={{ art_post, delete_like, did_like_q, addLikes, setArtPost, getPost, comment, setComment, getComment, getLikes, likes, postComment }}>
+    <ArtContext.Provider value={{ sent_chat_buddy, chatbuddy,activate_chat, activatemsg, setActivatemsg, art_post, delete_like, did_like_q, addLikes, setArtPost, getPost, comment, setComment, getComment, getLikes, likes, postComment }}>
       {props.children}
     </ArtContext.Provider>
   );
