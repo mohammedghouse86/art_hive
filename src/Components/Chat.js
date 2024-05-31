@@ -1,14 +1,98 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import ArtContext from "../ContextAPI/ArtWorks/artContext";
 import { useNavigate } from 'react-router-dom';
 import ChatMember from './ChatMember';
 import ChatMessages from './ChatMessages';
 
 const Chat = () => {
   const history = useNavigate();
+  const context = useContext(ArtContext);
+  const { activatemsg, chatbuddy } = context; // will activate the chat window once the user clicks on a site member.
   const host = `http://localhost:5000`; // Use a safe port like 5000
   const [list_Of_Users, Set_list_Of_users] = useState([]);
-
   const [user, setUser] = useState("")
+  const [chat_msg, setChat_msg] = useState([]);
+  const [chatBakwas, SetChatBakwas] = useState({ chatBakwas: "" }) // bakwas === comment
+  const get_chat_messages = async () => {
+    console.log("calling get chat messages function")
+    if (chatbuddy._id) {
+      try {
+        const response = await fetch(`${host}/api/chat/fetchChats/${chatbuddy._id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'auth-token': localStorage.getItem('token')
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const msgss = await response.json();
+        setChat_msg(msgss);
+        console.log("These are the msgss =", chat_msg);
+      } catch (error) {
+        console.error("Failed to fetch chat messages: ", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (chatbuddy) {
+      const get_chat_messages = async () => {
+        if (chatbuddy._id) {
+          try {
+            const response = await fetch(`${host}/api/chat/fetchChats/${chatbuddy._id}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'auth-token': localStorage.getItem('token')
+              }
+            });
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            const msgss = await response.json();
+            setChat_msg(msgss);
+            console.log("These are the msgss =", chat_msg);
+          } catch (error) {
+            console.error("Failed to fetch chat messages: ", error);
+          }
+        }
+      };
+      get_chat_messages();
+    }
+  }, [chatbuddy, setChat_msg]); // Correctly set the dependency array
+
+  const onChange = (e) => {
+    SetChatBakwas({ ...chatBakwas, [e.target.name]: e.target.value })
+  }
+
+
+
+  const fun_addChat = async () => {
+    try {
+      const response = await fetch(`${host}/api/chat/send_message/${chatbuddy._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token')
+        },
+        body: JSON.stringify({ 'message': chatBakwas.chatBakwas })
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+    }
+    catch (error) {
+      console.error("Failed to send chat messages: ", error);
+    }
+
+    SetChatBakwas({ chatBakwas: "" }); // Clear the input field
+    get_chat_messages();
+  }
+
+
+
   useEffect(() => {
 
     const fun_user = async () => {
@@ -61,15 +145,25 @@ const Chat = () => {
   }, [history]);
 
   return (
-    <div className='container' style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px'}}>
+    <>
+      <div className='d-flex flex-row mb-3'>
 
-      {list_Of_Users.map((e, i) => (
-        (user.name!==list_Of_Users[i].name) && (e._id !== undefined) && <ChatMember key={e._id} post={list_Of_Users[i]} i={i} />
-        
-      ))}
+        <div className="p-2">
+          <div className='container' style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
+            {list_Of_Users.map((e, i) => (
+              (user.name !== list_Of_Users[i].name) && (e._id !== undefined) && <ChatMember key={e._id} post={list_Of_Users[i]} i={i} />))}
+          </div>
+        </div>
 
-      <div className='container'><ChatMessages/></div>
-    </div>
+
+        <div className="p-2">
+          <div className='container'><ChatMessages /></div>
+          <input type='text' placeholder='Enter your message' onChange={onChange} name='chatBakwas' value={chatBakwas.chatBakwas}></input>
+          <button type='button' onClick={fun_addChat}>Send Chat</button>
+        </div>
+
+      </div>
+    </>
   );
 }
 
