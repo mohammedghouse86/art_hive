@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import ArtContext from "../ContextAPI/ArtWorks/artContext";
 
 const User_loggedIn = () => {
+    const context = useContext(ArtContext);
+    const { setLoggedInUser_name } = context;
     const [user, setUser] = useState("")
     useEffect(() => {
 
@@ -18,6 +21,7 @@ const User_loggedIn = () => {
 
                 const data = await response.json();
                 setUser(data);
+                setLoggedInUser_name(data); // context API
                 //console.log('this is the response', data);
             }
             catch (error) {

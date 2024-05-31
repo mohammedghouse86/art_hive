@@ -16,7 +16,7 @@ function App() {
         <div className="container text-center">
           <div className="row">
             <Navbar />
-            <div className="col">
+            <div className="col" style={{marginLeft:'5vw'}}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />

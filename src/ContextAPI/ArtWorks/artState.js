@@ -106,7 +106,7 @@ const ArtState = (props) => {
   };
 
   // Checking if the dude liked a pic or not
-  const did_like_q = async (postID) => {   
+  const did_like_q = async (postID) => {
     try {
       const response = await fetch(`${host}/api/upload/did_user_like/${postID}`, {
         method: 'GET',
@@ -117,10 +117,11 @@ const ArtState = (props) => {
 
       });
       const res_json = await response.json();
-      if (res_json.length<1){
-      return (false)} //retun user has not liked the post so now you can like it
+      if (res_json.length < 1) {
+        return (false)
+      } //retun user has not liked the post so now you can like it
       else {
-      return (true)//retun user has liked the post so now you can dislike it
+        return (true)//retun user has liked the post so now you can dislike it
       }
     } catch (error) {
       console.error("Failed to fetch likes: ", error);
@@ -139,42 +140,52 @@ const ArtState = (props) => {
         } // user - from auth-token and post from param.id
 
       });
-      
+
     } catch (error) {
       console.error("Failed to fetch likes: ", error);
       return 0;
     }
   };
-  const [activatemsg,setActivatemsg]=useState(false)
+  const [activatemsg, setActivatemsg] = useState(false)
 
 
   // Activating the chat message
   const activate_chat = async (id) => {
     try {
-          if(activatemsg===false){setActivatemsg(true)}
-          else{setActivatemsg(true)}
-        }  catch (error) {
+      if (activatemsg === false) { setActivatemsg(true) }
+      else { setActivatemsg(true) }
+    } catch (error) {
       console.error("Failed to activate chat window ", error);
       return 0;
     }
   };
 
-  const [chatbuddy,setChatbuddy]=useState([])
-    // sending the site members details with whome the user wants to chat
-    const sent_chat_buddy = async (user) => {
-      try {
-            setChatbuddy(user)
-          }  catch (error) {
-        console.error("Failed to activate chat window ", error);
-        return 0;
-      }
-    };
+  // sending the site members details with whome the user wants to chat
+  const [chatbuddy, setChatbuddy] = useState([])
+  const sent_chat_buddy = async (user) => {
+    try {
+      setChatbuddy(user)
+    } catch (error) {
+      console.error("Failed to activate chat window ", error);
+      return 0;
+    }
+  };
 
+  // Storing logged in username
+  const [Login_User_name, setLogin_User_name] = useState([])
+  const setLoggedInUser_name = async (user) => {
+    try {
+      setLogin_User_name(user.name)
+    } catch (error) {
+      console.error("Failed to activate chat window ", error);
+      return 0;
+    }
+  };
 
 
 
   return (
-    <ArtContext.Provider value={{ sent_chat_buddy, chatbuddy,activate_chat, activatemsg, setActivatemsg, art_post, delete_like, did_like_q, addLikes, setArtPost, getPost, comment, setComment, getComment, getLikes, likes, postComment }}>
+    <ArtContext.Provider value={{ setLoggedInUser_name, Login_User_name, setLogin_User_name, sent_chat_buddy, chatbuddy, activate_chat, activatemsg, setActivatemsg, art_post, delete_like, did_like_q, addLikes, setArtPost, getPost, comment, setComment, getComment, getLikes, likes, postComment }}>
       {props.children}
     </ArtContext.Provider>
   );

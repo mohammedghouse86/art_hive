@@ -34,26 +34,6 @@ router.post('/send_message/:id', getUser, async (req, res) => {
 });
 
 // 2. Route to get message
-router.post('/get_message/:id', getUser, async (req, res) => {
-    try {
-        const message_form = req.user.is;
-        const message_to = req.params.id;        
-        const { message } = req.body;
-
-        const new_message = new chatSchema({
-            chatWithUser_1: message_form,
-            chatWithUser_2: message_to,
-            message: message
-        });
-
-        const saved_new_message = await new_message.save();
-        res.json(saved_new_message);
-    } catch (error) {
-        console.error(error.message);
-        return res.status(500).json({ errors: 'Internal Server Error' });
-    }
-});
-
 router.get('/fetchChats/:id', getUser, async (req, res) => {
     const message_form = req.user.is;
     const message_to = req.params.id;  
