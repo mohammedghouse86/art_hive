@@ -162,11 +162,11 @@ const Chat = () => {
         </div>
 
 
-        <div className="p-2">
+        {chatbuddy._id && <div className="p-2">
           <div className='container'><ChatMessages /></div>
           <input type='text' placeholder='Enter your message' onKeyDown={handleKeyDown} onChange={onChange} name='chatBakwas' value={chatBakwas.chatBakwas}></input>
           <button type='button' onClick={fun_addChat}>Send Chat</button>
-        </div>
+        </div>}
 
       </div>
     </>
