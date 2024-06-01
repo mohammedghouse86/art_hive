@@ -144,6 +144,12 @@ const Chat = () => {
     }
   }, [history]);
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      fun_addChat();
+    }
+  };
+
   return (
     <>
       <div className='d-flex flex-row mb-3'>
@@ -158,7 +164,7 @@ const Chat = () => {
 
         <div className="p-2">
           <div className='container'><ChatMessages /></div>
-          <input type='text' placeholder='Enter your message' onChange={onChange} name='chatBakwas' value={chatBakwas.chatBakwas}></input>
+          <input type='text' placeholder='Enter your message' onKeyDown={handleKeyDown} onChange={onChange} name='chatBakwas' value={chatBakwas.chatBakwas}></input>
           <button type='button' onClick={fun_addChat}>Send Chat</button>
         </div>
 
